@@ -1,9 +1,10 @@
 import styles from "./Item.module.scss";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaCartPlus } from "react-icons/fa";
+import { mudarFavorito } from "store/reducers/itens";
 import { useDispatch, useSelector } from "react-redux";
 import { mudarCarrinho } from "store/reducers/carrinho";
-import { mudarFavorito } from "store/reducers/itens";
+import classNames from "classnames";
 
 const iconeProps = {
   size: 24,
@@ -11,19 +12,26 @@ const iconeProps = {
 };
 
 export default function Item(props) {
-  const { titulo, foto, preco, descricao, favorito, id } = props;
+  const { titulo, foto, preco, descricao, favorito, id, carrinho } = props;
   const dispatch = useDispatch();
   const estaNoCarrinho = useSelector((state) =>
-    state.carrinho.some((itemCarrinho) => itemCarrinho.id === id)
+    state.carrinho.some((itemNoCarrinho) => itemNoCarrinho.id === id)
   );
+
   function resolverFavorito() {
     dispatch(mudarFavorito(id));
   }
+
   function resolverCarrinho() {
     dispatch(mudarCarrinho(id));
   }
+
   return (
-    <div className={styles.item}>
+    <div
+      className={classNames(styles.item, {
+        [styles.itemNoCarrinho]: carrinho,
+      })}
+    >
       <div className={styles["item-imagem"]}>
         <img src={foto} alt={titulo} />
       </div>
